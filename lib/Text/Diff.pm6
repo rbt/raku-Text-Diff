@@ -23,7 +23,6 @@ class DiffLines {
     }
 
     multi submethod BUILD(IO::Handle :$lines, :$!offset = 1, :$!name, :$!mtime) {
-        $lines.chomp(False);
         @!lines = $lines.slurp.lines
     }
 }
