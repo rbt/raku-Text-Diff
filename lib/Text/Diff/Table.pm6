@@ -64,10 +64,10 @@ method hunk ($a, $b, @ops) {
         my $A = @A.shift;
         my $B = @B.shift;
 
-        ## Do minimal cleaning on identical elts so these look "normal":
-        ## tabs are expanded, trailing newelts removed, etc.  For differing
-        ## elts, make invisible characters visible if the invisible characters
-        ## differ.
+        # Do minimal cleaning on identical elts so these look "normal":
+        # tabs are expanded, trailing newelts removed, etc.  For differing
+        # elts, make invisible characters visible if the invisible characters
+        # differ.
         my $elt_type =  $B eq $missing-elt ?? "A" !!
                 $A eq $missing-elt ?? "B" !!
                 $A[1] eq $B[1]  ?? "="
