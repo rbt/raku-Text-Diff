@@ -76,67 +76,47 @@ method hunk ($a, $b, @ops) {
             if ( $elt_type eq "=" || $A[1] ~~ /\S/ || $B[1] ~~ /\S/ ) {
                 $A[1] = escape expand-tabs $A[1];
                 $B[1] = escape expand-tabs $B[1];
-            }
-            else {
+            } else {
                 $A[1] = escape $A[1];
                 $B[1] = escape $B[1];
             }
-        }
-        else {
-            $A[1] ~~ /^(\s*?)([^ \t].*?)? $/;
-            my ( $l-ws-A, $body-A, $t-ws-A ) = ( $1 // q{}, $2 // q{}, $3 // q{} );
-            $B[1] ~~ /^(\s*?)([^ \t].*?)? $/;
-            my ( $l-ws-B, $body-B, $t-ws-B ) = ( $1 // q{}, $2 // q{}, $3 // q{} );
+        } else {
+            $A[1] ~~ /^(\s*)? (.*\S)? (\s*)?$/;
+            my ( $l-ws-A, $body-A, $t-ws-A ) = ($1 // q{}, $2 // q{}, $3 // q{});
+            $B[1] ~~ /^(\s*)? (.*\S)? (\s*)?$/;
+            my ( $l-ws-B, $body-B, $t-ws-B ) = ($1 // q{}, $2 // q{}, $3 // q{});
 
             my $added-escapes;
             if ($l-ws-A ne $l-ws-B ) {
-                ## Make leading tabs visible.  Other non-' ' chars
-                ## will be dealt with in escape(), but this prevents
-                ## tab expansion from hiding tabs by making them
-                ## look like ' '.
-                $added-escapes = 1 if $l-ws-A ~~ s/<[\t]>/\\t/;
-                $added-escapes = 1 if $l-ws-B ~~ s/<[\t]>/\\t/;
+                # Make leading tabs visible.  Other non-' ' chars
+                # will be dealt with in escape(), but this prevents
+                # tab expansion from hiding tabs by making them
+                # look like ' '.
+                $l-ws-A ~~ s/<[\t]>/\\t/;
+                $l-ws-B ~~ s/<[\t]>/\\t/;
             }
 
             if ( $t-ws-A ne $t-ws-B ) {
-                ## Only trailing whitespace gets the \s treatment
-                ## to make it obvious what's going on.
-                $added-escapes = 1 if $t-ws-A ~~ s/" "/\\s/;
-                $added-escapes = 1 if $t-ws-B ~~ s/" "/\\s/;
-                $added-escapes = 1 if $t-ws-A ~~ s/<[\t]>/\\t/;
-                $added-escapes = 1 if $t-ws-B ~~ s/<[\t]>/\\t/;
+                # Only trailing whitespace gets the \s treatment
+                # to make it obvious what's going on.
+                $t-ws-A ~~ s/" "/\\s/;
+                $t-ws-B ~~ s/" "/\\s/;
+                $t-ws-A ~~ s/<[\t]>/\\t/;
+                $t-ws-B ~~ s/<[\t]>/\\t/;
             }
             else {
-                $t-ws-A = $t-ws-B = "";
+                $t-ws-A = $t-ws-B = q{};
             }
 
-            my $do-tab-escape = $added-escapes || do {
-                my $expanded-A = expand-tabs join( $body-A, $l-ws-A, $t-ws-A );
-                my $expanded-B = expand-tabs join( $body-B, $l-ws-B, $t-ws-B );
-                $expanded-A eq $expanded-B;
-            };
-
-            my $do-back-escape = $do-tab-escape || do {
-                my ( $unescaped-A, $escaped-A,
-                     $unescaped-B, $escaped-B
-                   ) = map join( "", /(\\.)/ ),
-                        (expand-tabs join( $body-A, $l-ws-A, $t-ws-A ),
-                        expand-tabs join( $body-B, $l-ws-B, $t-ws-B )).map(-> $line { ( $line, escape $line ) });
-                $unescaped-A ne $unescaped-B && $escaped-A eq $escaped-B;
-            };
-
-            if ( $do-back-escape ) {
-                $body-A ~~ s/\\/\\\\/;
-                $body-B ~~ s/\\/\\\\/;
+            if ($body-A ne $body-B) {
+                $t-ws-A ~~ s/" "/\\s/;
+                $t-ws-B ~~ s/" "/\\s/;
+                $t-ws-A ~~ s/<[\t]>/\\t/;
+                $t-ws-B ~~ s/<[\t]>/\\t/;
             }
 
-            my $line-A = join $body-A, $l-ws-A, $t-ws-A;
-            my $line-B = join $body-B, $l-ws-B, $t-ws-B;
-
-            unless ( $do-tab-escape ) {
-                $line-A = expand-tabs $line-A;
-                $line-B = expand-tabs $line-B;
-            }
+            my $line-A = ($l-ws-A, $body-A, $t-ws-A).join(q{});
+            my $line-B = ($l-ws-B, $body-B, $t-ws-B).join(q{});
 
             $A[1] = escape $line-A;
             $B[1] = escape $line-B;
