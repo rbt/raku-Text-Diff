@@ -85,7 +85,7 @@ files.
       | 5|t/01text_vs_data.t                | 8|t/01text_vs_data.t            |
       | 6|t/10test.t                        | 9|t/10test.t                    |
       +--+----------------------------------+--+------------------------------+
-``
+```
 This format also goes to some pains to highlight "invisible" characters
 on differing elements by selectively escaping whitespace:
 
