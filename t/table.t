@@ -7,7 +7,7 @@ use Text::Diff;
 {
     my $result = diff(qq{TRAILING\t\n\tSTART\nMID\t\tDLE\n\tA\tL\tL\t}, q{}, output-style => 'Table');
 
-    my $want = qq:to/_END_/;
+    my $want = q:to/_END_/;
 +---+------------------+---+---+
 | Ln|A                 | Ln|B  |
 +---+------------------+---+---+
