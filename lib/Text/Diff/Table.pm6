@@ -81,45 +81,42 @@ method hunk ($a, $b, @ops) {
                 $B[1] = escape $B[1];
             }
         } else {
-            $A[1] ~~ /^(\s*)? (.*\S)? (\s*)?$/;
-            my ( $l-ws-A, $body-A, $t-ws-A ) = ($1 // q{}, $2 // q{}, $3 // q{});
-            $B[1] ~~ /^(\s*)? (.*\S)? (\s*)?$/;
-            my ( $l-ws-B, $body-B, $t-ws-B ) = ($1 // q{}, $2 // q{}, $3 // q{});
+            $A[1] ~~ /^  $<prefix>=(\s*)?  $<body>=(.*\S)?  $<suffix>=(\s*)?$/;
+            my ( $l-ws-A, $body-A, $t-ws-A ) = (~$<prefix> // q{}, ~$<body> // q{}, ~$<suffix> // q{});
+            $B[1] ~~ /^  $<prefix>=(\s*)?  $<body>=(.*\S)?  $<suffix>=(\s*)?$/;
+            my ( $l-ws-B, $body-B, $t-ws-B ) = (~$<prefix> // q{}, ~$<body> // q{}, ~$<suffix> // q{});
 
-            my $added-escapes;
             if ($l-ws-A ne $l-ws-B ) {
                 # Make leading tabs visible.  Other non-' ' chars
                 # will be dealt with in escape(), but this prevents
                 # tab expansion from hiding tabs by making them
                 # look like ' '.
-                $l-ws-A ~~ s/<[\t]>/\\t/;
-                $l-ws-B ~~ s/<[\t]>/\\t/;
+                $l-ws-A ~~ s:g/<[\t]>/\\t/;
+                $l-ws-B ~~ s:g/<[\t]>/\\t/;
             }
 
             if ( $t-ws-A ne $t-ws-B ) {
                 # Only trailing whitespace gets the \s treatment
                 # to make it obvious what's going on.
-                $t-ws-A ~~ s/" "/\\s/;
-                $t-ws-B ~~ s/" "/\\s/;
-                $t-ws-A ~~ s/<[\t]>/\\t/;
-                $t-ws-B ~~ s/<[\t]>/\\t/;
+                $t-ws-A ~~ s:g/" "/\\s/;
+                $t-ws-B ~~ s:g/" "/\\s/;
+                $t-ws-A ~~ s:g/<[\t]>/\\t/;
+                $t-ws-B ~~ s:g/<[\t]>/\\t/;
             }
             else {
                 $t-ws-A = $t-ws-B = q{};
             }
 
             if ($body-A ne $body-B) {
-                $t-ws-A ~~ s/" "/\\s/;
-                $t-ws-B ~~ s/" "/\\s/;
-                $t-ws-A ~~ s/<[\t]>/\\t/;
-                $t-ws-B ~~ s/<[\t]>/\\t/;
+                $body-A ~~ s:g/<[\t]>/\\t/;
+                $body-B ~~ s:g/<[\t]>/\\t/;
             }
 
             my $line-A = ($l-ws-A, $body-A, $t-ws-A).join(q{});
             my $line-B = ($l-ws-B, $body-B, $t-ws-B).join(q{});
 
-            $A[1] = escape $line-A;
-            $B[1] = escape $line-B;
+            $A[1] = escape expand-tabs $line-A;
+            $B[1] = escape expand-tabs $line-B;
         }
 
         @elts.push([ |@$A, |@$B, $elt_type ]);
