@@ -15,6 +15,7 @@
   "perl": "6.d",
   "provides": {
     "Text::Diff": "lib/Text/Diff.pm6",
+    "Text::Diff::Output": "lib/Text/Diff/Output.pm6",
     "Text::Diff::Table": "lib/Text/Diff/Table.pm6"
   },
   "resources": [
