@@ -6,7 +6,8 @@
   "build-depends": [
   ],
   "depends": [
-    "Algorithm::Diff"
+    "Algorithm::Diff",
+    "Text::Tabs<0.2.1+>"
   ],
   "description": "Perform line-by-line diffs on files and record sets",
   "license": "Artistic-2.0",

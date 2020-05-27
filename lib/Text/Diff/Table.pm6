@@ -4,6 +4,8 @@ use Text::Diff::Output;
 
 unit class Text::Diff::Table is Text::Diff::Base;
 
+use Text::Tabs;
+
 has $.offset-a = 0;
 has $.offset-b = 0;
 has $.index-label = 'Ln';
@@ -19,24 +21,9 @@ sub escape(Str $string) {
     return $str;
 }
 
-# TODO: This was submitted to Text::Tabs. Use that module on merge?
-# https://github.com/Altai-man/perl6-Text-Tabs/issues/new
-sub expand-tabs(Str $string, :$tab-stop = 4) {
-    my $expanded = q{};
-    my $position = 0;
-    for $string.split(/\t/, :v) -> $part {
-        if ($part eq "\t") {
-            my $distance-from-stop = ($position) % $tab-stop;
-            my $tab-length = $tab-stop - $distance-from-stop;
-            $expanded ~= q{ } x $tab-length;
-            $position += $tab-length;
-        } else {
-            $position += $part.chars;
-            $expanded ~= $part;
-        }
-    }
-
-    return $expanded;
+# Use Text::Tabs version of expand. Convert the output from Seq to Str.
+sub expand-tabs(Str $string) {
+    return ~expand($string, :tab-stop(4))
 }
 
 my $missing-elt = [ "", "" ];
