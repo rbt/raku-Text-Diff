@@ -7,7 +7,7 @@
   ],
   "depends": [
     "Algorithm::Diff",
-    "Text::Tabs<0.2.1+>"
+    "Text::Tabs:ver<1.0+>"
   ],
   "description": "Perform line-by-line diffs on files and record sets",
   "license": "Artistic-2.0",
