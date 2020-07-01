@@ -22,8 +22,8 @@ sub escape(Str $string) {
 }
 
 # Use Text::Tabs version of expand. Convert the output from Seq to Str.
-sub expand-tabs(Str $string) {
-    return ~expand($string, :tab-stop(4))
+sub expand-tabs(Str $string --> Str) {
+    return expand($string, :tab-stop(4))
 }
 
 my $missing-elt = [ "", "" ];
