@@ -10,7 +10,7 @@ Text::Diff - Perform diffs on files and record sets
   # Mix and match filenames, strings, file handles, producer subs,
   # or arrays of records; returns diff in a string.
   # WARNING: can return B<large> diffs for large files.
-  my $diff = diff $string1,   $string2, output-style => Context;
+  my $diff = diff $string1,   $string2, output-style => 'Context';
   my $diff = diff '/tmp/log1.txt'.IO.open, '/tmp/log2.txt'.IO.open;
   my $diff = diff @records1,  @records2;
 
@@ -32,7 +32,7 @@ be a valid diff and comprehensible by "patch".
 
 ```raku
 diff($a, $b, Int :offset-a = 0, Int :offset-b = 0, Str :filename-a = 'A', Str :filename-b = 'B',
-     Instant :mtime-a, Instant :mtime-b, OutputStyle :output-style = Unified, 
+     Instant :mtime-a, Instant :mtime-b, OutputStyle :output-style = 'Unified',
      Int :context-lines = 3 --> Str)
 ```
 
