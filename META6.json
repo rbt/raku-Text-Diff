@@ -1,7 +1,7 @@
 {
-  "auth": "github:rbt",
+  "auth": "zef:rbt",
   "authors": [
-    "Rod Taylor <rbt@cpan.org>"
+    "Rod Taylor <raku@rbt.ca>"
   ],
   "build-depends": [
   ],
@@ -33,5 +33,5 @@
   "test-depends": [
     "Test"
   ],
-  "version": "1.0.4"
+  "version": "1.0.5"
 }
